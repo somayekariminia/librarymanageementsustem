@@ -42,13 +42,13 @@ public class BookRepository {
     }
     public int getRequest(String name) throws SQLException {
         Connection connection=MyConnection.getConnection();
-        PreparedStatement preparedStatement=connection.prepareStatement("select * from book_tbl where name=?");
+        PreparedStatement preparedStatement=connection.prepareStatement("select id from book_tbl where name=?");
         preparedStatement.setString(1,name);
         ResultSet resultSet=preparedStatement.executeQuery();
         int id=0;
         while(resultSet.next()){
-            if(resultSet.getBoolean("reserve")==false){
-                 id=resultSet.getInt("Id");
+            {
+                 id=resultSet.getInt("id");
             }
         }
         return id;
@@ -60,6 +60,23 @@ public class BookRepository {
         preparedStatement.setInt(1,accauntId);
         preparedStatement.setInt(2,bookId);
         preparedStatement.executeUpdate();
-
     }
+  public  void getBorrow(int bookId,int accauntId) throws SQLException {
+      Connection connection=MyConnection.getConnection();
+      PreparedStatement preparedStatement=connection.prepareStatement("insert into no_borrow" +
+              " (accaunt_id,book_id)"+"values (?,?)");
+      preparedStatement.setInt(1,accauntId);
+      preparedStatement.setInt(2,bookId);
+      preparedStatement.executeUpdate();
+  }
+
+    public  void getReturned(int bookId,int accauntId) throws SQLException {
+        Connection connection=MyConnection.getConnection();
+        PreparedStatement preparedStatement=connection.prepareStatement("insert into no_returned" +
+                " (accaunt_id,book_id)"+"values (?,?)");
+        preparedStatement.setInt(1,accauntId);
+        preparedStatement.setInt(2,bookId);
+        preparedStatement.executeUpdate();
+    }
+
 }
