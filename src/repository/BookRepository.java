@@ -27,11 +27,11 @@ public class BookRepository {
         return flage;
     }
 
-    public Date getDuedt(String name, String uniqId) throws SQLException {
+    public Date getDuedt(String name, int id) throws SQLException {
         Connection connection = MyConnection.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("select duedt from book_tbl where name=? && uniqId=? ");
+        PreparedStatement preparedStatement = connection.prepareStatement("select duedt from book_tbl where name=? and id=? ");
         preparedStatement.setString(1, name);
-        preparedStatement.setString(2, uniqId);
+        preparedStatement.setInt(2, id);
         ResultSet resultSet = preparedStatement.executeQuery();
         Date duedt = null;
         while (resultSet.next()) {
@@ -40,43 +40,69 @@ public class BookRepository {
         return duedt;
 
     }
+
     public int getRequest(String name) throws SQLException {
-        Connection connection=MyConnection.getConnection();
-        PreparedStatement preparedStatement=connection.prepareStatement("select id from book_tbl where name=?");
-        preparedStatement.setString(1,name);
-        ResultSet resultSet=preparedStatement.executeQuery();
-        int id=0;
-        while(resultSet.next()){
+        Connection connection = MyConnection.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("select id from book_tbl where name=?");
+        preparedStatement.setString(1, name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int id = 0;
+        while (resultSet.next()) {
             {
-                 id=resultSet.getInt("id");
+                id = resultSet.getInt("id");
             }
         }
         return id;
     }
-    public void getReserve(int accauntId,int bookId) throws SQLException {
-        Connection connection=MyConnection.getConnection();
-        PreparedStatement preparedStatement=connection.prepareStatement("insert into no_reserved" +
-                " (accaunt_id,book_id)"+"values (?,?)");
-        preparedStatement.setInt(1,accauntId);
-        preparedStatement.setInt(2,bookId);
-        preparedStatement.executeUpdate();
-    }
-  public  void getBorrow(int bookId,int accauntId) throws SQLException {
-      Connection connection=MyConnection.getConnection();
-      PreparedStatement preparedStatement=connection.prepareStatement("insert into no_borrow" +
-              " (accaunt_id,book_id)"+"values (?,?)");
-      preparedStatement.setInt(1,accauntId);
-      preparedStatement.setInt(2,bookId);
-      preparedStatement.executeUpdate();
-  }
 
-    public  void getReturned(int bookId,int accauntId) throws SQLException {
-        Connection connection=MyConnection.getConnection();
-        PreparedStatement preparedStatement=connection.prepareStatement("insert into no_returned" +
-                " (accaunt_id,book_id)"+"values (?,?)");
-        preparedStatement.setInt(1,accauntId);
-        preparedStatement.setInt(2,bookId);
+    public void getReserve(int accauntId, int bookId) throws SQLException {
+        Connection connection = MyConnection.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into no_reserved" +
+                " (accaunt_id,book_id)" + "values (?,?)");
+        preparedStatement.setInt(1, accauntId);
+        preparedStatement.setInt(2, bookId);
         preparedStatement.executeUpdate();
     }
 
+    public void getBorrow(int bookId, int accauntId) throws SQLException {
+        Connection connection = MyConnection.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into no_borrow" +
+                " (accaunt_id,book_id)" + "values (?,?)");
+        preparedStatement.setInt(1, accauntId);
+        preparedStatement.setInt(2, bookId);
+        preparedStatement.executeUpdate();
+    }
+
+    public void getReturned(int bookId, int accauntId) throws SQLException {
+        Connection connection = MyConnection.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into no_returne" +
+                " (accaunt_id,book_id)" + "values (?,?)");
+        preparedStatement.setInt(1, accauntId);
+        preparedStatement.setInt(2, bookId);
+        preparedStatement.executeUpdate();
+    }
+
+    public boolean isReturned(int id) throws SQLException {
+        Connection connection = MyConnection.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from no_returne where id=?");
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        boolean flage = false;
+        while (resultSet.next()) {
+            {
+                int idReturn = resultSet.getInt(1);
+                if (idReturn != 0)
+                    flage = true;
+            }
+        }
+        return flage;
+    }
+    public void getLost(int bookId, int accauntId) throws SQLException {
+        Connection connection = MyConnection.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into no_lose" +
+                " (accaunt_id,book_id)" + "values (?,?)");
+        preparedStatement.setInt(1, accauntId);
+        preparedStatement.setInt(2, bookId);
+        preparedStatement.executeUpdate();
+    }
 }
